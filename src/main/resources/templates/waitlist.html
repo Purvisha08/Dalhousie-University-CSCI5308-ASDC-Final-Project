@@ -1,0 +1,63 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<div th:replace = "fragments/headTag :: head_tag('My Events')"></div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<body>
+<div th:replace = "fragments/topnavigationbar :: studenttopnavbar(activeTab='myevents')"></div>
+
+<div style="margin-top:10px; margin-left:50px;">
+  <div class="alert alert-light" role="alert" style="text-align:center">
+            <span>
+            You are viewing your waitlisted events.
+            <a href="/myevents">View your registerations here</a>
+        </span>
+  </div>
+  <div class="container">
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped ">
+
+        <thead>
+        <tr>
+          <th class="col-md-2">Event</th>
+          <th class="col-md-1">Seats available</th>
+          <th class="col-md-1">Event start date</th>
+          <th class="col-md-1"></th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr th:each="waitlist: ${waitlistArray}">
+            <td>
+              <a th:href="@{/events/event(id=${waitlist.eventId})}" th:text="${waitlist.eventName}">
+              </a>
+            </td>
+<!--            <td th:text="${waitlist.eventCapacity - waitlist.eventRegisterCount}" />-->
+            <td>
+              <div class="row">
+                <div class="col-2"><span th:text="${waitlist.eventCapacity - waitlist.eventRegisterCount}"></span></div>
+                <div class="col-6">
+                  <form th:if="${(waitlist.eventCapacity - waitlist.eventRegisterCount) > 0}" th:action="@{'/eventregister/{id}'(id=${waitlist.eventId})}"  th:method="get">
+                    <button type="submit" id="submitButton" style="color:green">Register</button>
+                  </form>
+                </div>
+              </div>
+            </td>
+            <td th:text="${waitlist.eventStartDate}" />
+            <td>
+              <form th:action="@{'/waitlist/delete/{id}'(id=${waitlist.eventId})}" method="post">
+                <button type="submit" id="submitButton" style="color:darkred">Unsubsribe</button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+
+</html>

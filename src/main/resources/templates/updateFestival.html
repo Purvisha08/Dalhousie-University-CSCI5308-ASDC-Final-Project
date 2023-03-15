@@ -1,0 +1,52 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace = "fragments/headTag :: head_tag('Update Festival')"></div>
+
+<body>
+<div class="row h-100 justify-content-center align-items-center">
+    <div class="container col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Update Festival</h2>
+                <div th:if="${update_error}" th:text="${update_error}" class="alert alert-danger"></div>
+                <form method="POST" class="update-festival-form"
+                      th:object="${festival}" th:action="@{'/festival/'+${festival_id}+'/update'}">
+                    <div class="mb-3">
+                        <label class="form-label" for="name">Name</label>
+                        <input type="text" th:field="*{name}" class="form-control" placeholder="Name" autofocus="true">
+                        <small class="my-1 text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="description">Description</label>
+                        <textarea type="text" th:field="*{description}" class="form-control" placeholder="Description" autofocus="true"></textarea>
+                        <small class="my-1 text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></small>
+                    </div>
+                    <div class="mb-3" hidden>
+                        <label class="form-label" for="university">University</label>
+                        <input type="text" th:field="*{university}" class="form-control" placeholder="University" autofocus="true">
+                        <small class="my-1 text-danger" th:if="${#fields.hasErrors('university')}" th:errors="*{university}"></small>
+                    </div>
+                    <div class="row mb-3" hidden >
+                        <div class="col-md-6">
+                            <div >
+                                <label class="form-label" for="startDate">Start Date</label>
+                                <input type="date" th:field="*{startDate}" class="form-control" placeholder="Start Date">
+                                <small class="my-1 text-danger" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div >
+                                <label class="form-label" for="endDate">End Date</label>
+                                <input type="date" th:field="*{endDate}" class="form-control" placeholder="End Date">
+                                <small class="my-1 text-danger" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></small>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-lg btn-success btn-block" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+  <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+  <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+  <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+<body>
+
+<div th:replace = "fragments/topnavigationbar :: studenttopnavbar(activeTab='studentprofile')"></div>
+
+<div class="row">
+  <div class="col-1"></div>
+  <div class="col-4">
+    <div class="card text-center" style="margin-top:100px;">
+      <h3 class="card-header" th:text="${student.name}"></h3>
+      <div class="card-body">
+        <h5 class="card-title" th:text="${student.email}"></h5>
+        <p class="card-text" th:text="'Account created on : '+${student.getCreatedAtDisplayText()}"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-2"></div>
+
+  <div class="col-4">
+    <div class="card text-center" style="margin-top:100px;">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-6">
+            <h6 style="margin-left:30px;">Interests</h6>
+          </div>
+          <div class="col-3">
+            <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#addinterestmodal">Add Interest</button>
+          </div>
+        </div>
+      </div>
+      <ul  th:each="interest : ${studentinterestslist}">
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-6">
+              <span th:text="${interest.categoryId}"></span>
+            </div>
+            <div class="col-3">
+              <form th:action="@{'/deletestudentinterest/{id}'(id=${interest.studentInterestId})}"  th:method="post">
+                <button type="submit" id="submitButton">Delete</button>
+              </form>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="modal fade" id="addinterestmodal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add intereset</h5>
+      </div>
+      <div class="modal-body">
+        <form th:action="@{/addstudentinterest}"  method="post">
+          <select  class="form-control" name="categoryId" placeholder="Interests" autofocus="true">
+            <option th:each="i : ${categoryOptions}" th:value="${i}" th:text="${i}"></option>
+          </select>
+          <input type="submit" />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

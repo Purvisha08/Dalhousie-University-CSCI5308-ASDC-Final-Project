@@ -1,0 +1,62 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+  <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+  <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+  <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+<body>
+<div th:replace = "fragments/topnavigationbar :: studenttopnavbar(activeTab='wallet')"></div>
+
+<div class="card">
+  <h5 class="card-header">Wallet</h5>
+  <div class="card-body">
+    <h5 class="card-title">Current balance</h5>
+    <p class="card-text" th:text="${currentBalance} + ' CAD' "></p>
+    <a href="/addbalance" class="btn btn-primary">Add money</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped ">
+
+      <thead>
+        <tr>
+          <th class="col-md-1">Id</th>
+          <th class="col-md-2">Date</th>
+          <th class="col-md-1">Amount</th>
+          <th class="col-md-2">Type</th>
+          <th class="col-md-5">Description</th>
+          <th class="col-md-1">Source</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr th:each="t: ${transactions}">
+            <td th:text="${t.transactionId}" />
+            <td th:text="${t.transactionDate}" />
+            <td th:text="${t.amount}" />
+            <td th:text="${t.transactionType}" />
+            <td th:text="${t.description}" />
+            <td th:text="${t.transactionSource}" />
+          </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace = "fragments/headTag :: head_tag('My Events')"></div>
+
+<body>
+    <div th:replace = "fragments/topnavigationbar :: studenttopnavbar(activeTab='myevents')"></div>
+
+    <div style="margin-top:10px; margin-left:50px;">
+
+        <div class="alert alert-light" role="alert" style="text-align:center">
+            <span>
+            You are viewing your registered events history.
+            <a href="/waitlist">View Waitlist here</a>
+        </span>
+        </div>
+
+        <div class="container">
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped ">
+
+                    <thead>
+                    <tr>
+                        <th class="col-md-1">Registration Id</th>
+                        <th class="col-md-2">Registration Date</th>
+                        <th class="col-md-2">Event Name</th>
+                        <th class="col-md-1">Amount</th>
+                        <th class="col-md-1">Status</th>
+                        <th class="col-md-2">Event Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="registration: ${eventRegistrationsList}">
+                        <td th:text="${registration.registrationId}" />
+                        <td th:text="${registration.registrationDate}" />
+                        <td>
+                            <a th:href="@{/events/event(id=${registration.eventId})}" th:text="${registration.eventName}">
+                            </a>
+                        </td>
+                        <td th:text="${registration.finalPrice}" />
+                        <td th:text="${registration.status}" />
+                        <td th:text="${registration.eventStartDate}" />
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

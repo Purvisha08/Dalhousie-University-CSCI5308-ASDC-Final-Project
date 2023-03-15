@@ -1,0 +1,79 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace = "fragments/headTag :: head_tag('Festival')"></div>
+
+<body>
+    <div th:replace = "fragments/topnavigationbar :: hosttopnavbar(activeTab = 'festivals')"></div>
+    <div class="row justify-content-center align-items-center mt-3">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Festival Name:
+                                    <span th:text="${festival.getName()}">14</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Description:
+                                    <span th:text="${festival.getDescription()}">2</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Start Date:
+                                    <span th:text="${festival.getStartDate()}">1</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    End Date:
+                                    <span th:text="${festival.getEndDate()}">1</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    University:
+                                    <span th:text="${festival.getUniversity()}">1</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex flex-column align-items-center">
+                    <a th:href="@{'/festival/'+${festival.getId()}+'/update'}" type="button" class="btn btn-success w-75 mb-2">Edit</a>
+                    <a th:href="@{'/festival/'+${festival.getId()}+'/event/new'}"type="button" class="btn btn-success w-75 mb-2">New Event</a>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <p class="h3">Events</p>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> Name </th>
+                                <th> Category </th>
+                                <th> Ticket Price </th>
+                                <th> Total Participants </th>
+                                <th> Venue </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${festivalEvents == null or festivalEvents.empty}">
+                                <td colspan="5"> No events yet. </td>
+                            </tr>
+                            <tr th:each="event : ${festivalEvents}">
+                                <td>
+                                    <a th:href="@{'/festival/'+${festival.getId()}+'/event/'+${event.getId()}+''}" th:text="${event.getName()}"> Name </a>
+                                </td>
+                                <td><span th:text="${event.getCategory()}"> University </span></td>
+                                <td><span th:text="${event.getPrice()}"> Price </span></td>
+                                <td><span th:text="${event.getRegisterCount()}"> 11 </span></td>
+                                <td><span th:text="${event.getVenue()}"> Venue </span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

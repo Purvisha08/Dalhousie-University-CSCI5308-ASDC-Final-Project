@@ -1,0 +1,94 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+
+<div th:replace = "fragments/headTag :: head_tag('Student Dashboard')"></div>
+<body>
+<div th:replace = "fragments/topnavigationbar :: studenttopnavbar(activeTab='events')"></div>
+<!--Search Begin-->
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <form th:action="@{/search}" method = "get">
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="Search" size="80" align="center">
+            <button type="submit" class="btn btn-info">Search</button>
+        </form>
+    </div>
+    <div class="col-3"></div>
+</div>
+<!--    End Search-->
+
+<div class="container">
+    <div style="display: flex; justify-content: space-around; margin-bottom: 20px">
+        <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#date-range">Date range</button>
+        <form method="POST" th:object="${eventForm}" th:action="@{/searchbydaterange}">
+            <div id="date-range" class="collapse">
+                <div style="padding: 10px">
+                    <label>Start Date</label>
+                    <input type="date" th:field="*{startDate}"/>
+                </div>
+                <div style="padding: 10px">
+                    <label>End Date </label>
+                    <input type="date" th:field="*{endDate}"/>
+                </div>
+                <button type="submit" style="margin: 5px">Filter</button>
+            </div>
+        </form>
+
+
+        <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#category-range">Categories</button>
+        <div id="category-range" class="collapse">
+            <form th:action="@{/searchbycategory}" method="POST">
+                <select class="form-control" name="categoryName">
+                    <option th:each="cat : ${categoryOptions}" th:value="${cat}" th:text="${cat}"></option>
+                </select>
+                <button type="submit" style="margin: 5px">Filter</button>
+            </form>
+        </div>
+
+        <a href="studentdashboard"><button class="btn btn-primary"> Reset </button> </a>
+
+    </div>
+
+</div>
+
+<!--Table Begin-->
+<div class="container">
+
+    <div class="table-responsive">
+
+        <table cellpadding="20px" class = "table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th class="col-md-1">Name</th>
+                <th class="col-md-2">Category</th>
+                <th class="col-md-1">Price</th>
+                <th class="col-md-1">Capacity</th>
+                <th class="col-md-1">Start Date</th>
+                <th class="col-md-1"></th>
+            </tr>
+
+            </thead>
+            <tr th:each="e: ${eventList}">
+                <td th:text="${e.name}"></td>
+                <td th:text="${e.category}" />
+                <td th:text="${e.price}" />
+                <td th:text="${e.capacity}" />
+                <td th:text="${e.startDate}" />
+                <td>
+                    <button style="border:0px">
+                        <a th:href="@{/events/event(id=${e.id})}">
+                            View Event
+                        </a>
+                    </button>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+</div>
+<!--End Table-->
+
+</body>
+
+</html>

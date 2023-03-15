@@ -1,0 +1,128 @@
+stages:         
+  - build
+  - test
+  - deploy
+
+# build configs for the three environments
+build-dev:     
+  image: maven:3.6.3-jdk-11
+  stage: build
+  script:
+    - mvn package
+  tags:
+    - dalfcs_docker_kvm
+  environment:
+    name: dev
+  only:
+    - dev
+
+build-test:     
+  image: maven:3.6.3-jdk-11
+  stage: build
+  script:
+    - mvn package
+  tags:
+    - dalfcs_docker_kvm
+  environment:
+    name: test
+  only:
+    - test
+
+build-prod:     
+  image: maven:3.6.3-jdk-11
+  stage: build
+  script:
+    - mvn package
+  tags:
+    - dalfcs_docker_kvm
+  environment:
+    name: production
+  only:
+    - main
+
+#  test configs for the three environments
+test-dev:     
+  image: maven:3.6.3-jdk-11
+  stage: test
+  script:
+    - mvn test
+  tags:
+    - dalfcs_docker_kvm
+  environment:
+    name: dev
+  only:
+    - dev
+
+test-test:     
+  image: maven:3.6.3-jdk-11
+  stage: test
+  script:
+    - mvn test
+  tags:
+    - dalfcs_docker_kvm
+  environment:
+    name: test
+  only:
+    - test
+
+test-prod:     
+  image: maven:3.6.3-jdk-11
+  stage: test
+  script:
+    - mvn test
+  tags:
+    - dalfcs_docker_kvm
+  environment:
+    name: production
+  only:
+    - main
+
+#  deploy configs for the three environments
+deploy-dev:
+  stage: deploy
+  image: ruby:2.6
+  script:
+  - apt-get update -qy
+  - apt-get install -y ruby-dev
+  - gem install dpl
+  - dpl --provider=heroku --app=$HEROKU_DEV_APP_NAME --api-key=$HEROKU_API_KEY
+  environment:
+    name: dev
+    url: https://myeventmanagerdev.herokuapp.com/
+  tags:
+    - dalfcs_gitlab_docker_ci
+  only:
+    - dev
+
+deploy-test:
+  stage: deploy
+  image: ruby:2.6
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=$HEROKU_STAGING_APP_NAME --api-key=$HEROKU_API_KEY
+  environment:
+    name: test
+    url: https://myeventmanagertest.herokuapp.com/
+  tags:
+    - dalfcs_gitlab_docker_ci
+  only: 
+    - test
+
+deploy-prod: 
+  stage: deploy
+  image: ruby:2.6
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=$HEROKU_PROD_APP_NAME --api-key=$HEROKU_API_KEY
+  environment:
+    name: production
+    url: https://myeventmanager.herokuapp.com/
+  tags:
+    - dalfcs_gitlab_docker_ci
+  only: 
+    - main
+  

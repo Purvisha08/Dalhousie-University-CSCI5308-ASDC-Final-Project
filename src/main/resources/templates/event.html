@@ -1,0 +1,193 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <div th:replace = "fragments/headTag :: head_tag('Events')"></div>
+
+    <body>
+        <div th:replace = "fragments/topnavigationbar :: hosttopnavbar(activeTab = 'events')"></div>
+        <div class="row justify-content-center align-items-center mt-3">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Event Name:
+                                        <span th:text="${event.getName()}" >14</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Description:
+                                        <span th:text="${event.getDescription()}" >2</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Start Date:
+                                        <span th:text="${event.getStartDate()}" >1</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        End Date:
+                                        <span th:text="${event.getEndDate()}" >1</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Category:
+                                        <span th:text="${event.getCategory()}" >1</span>
+                                    </li>
+
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Venue:
+                                        <span th:text="${event.getVenue()}" >1</span>
+                                    </li>
+
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Total Seats:
+                                        <span th:text="${event.getCapacity()}" >1</span>
+                                    </li>
+
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Ticket Price:
+                                        <span th:text="${event.getPrice()}" >1</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Total Participants:
+                                        <span th:text="${event.getRegisterCount()}" >1</span>
+                                    </li>
+
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Waitlist Count:
+                                        <span th:text="${event.getWaitListCount()}" >1</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-flex flex-column align-items-center">
+                        <a th:href="@{'/festival/'+${festival_id}+'/event/'+${event.getId()}+'/update'}" type="button" class="btn btn-success w-75 mb-2">Edit</a>
+                        <a type="button" class="btn btn-success w-75 mb-2" data-bs-toggle="modal" data-bs-target="#participantsModal">Participants</a>
+                        <a type="button" class="btn btn-success w-75 mb-2" data-bs-toggle="modal" data-bs-target="#notificationModal">Send Notifications</a>
+                        <a th:class="'btn btn-success w-75 mb-2 '+${event.getCompleted() ? 'disabled' : ''}" th:href="@{'/festival/'+${festival_id}+'/event/'+${event.getId()}+'/complete'}" type="button">Event Complete</a>
+                    </div>
+                </div>
+
+                <div class="row my-3" th:if="${event.getCompleted()}">
+                    <div class="col-md-12">
+                        <p class="h2">Results:</p>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Winner:
+                                        <span th:text="${event.getWinnerStudent() == null ? '-' : event.getWinnerStudent().getName()}" >14</span>
+                                    </li>
+
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        First Runner Up:
+                                        <span th:text="${event.getFirstRunnerUpStudent() == null ? '-' : event.getFirstRunnerUpStudent().getName()}" >14</span>
+                                    </li>
+
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Second Runner Up:
+                                        <span th:text="${event.getSecondRunnerUpStudent() == null ? '-' : event.getSecondRunnerUpStudent().getName()}" >14</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="h2">FAQs:</p>
+                        <ul th:if="${eventQuestionAnswers != null && eventQuestionAnswers.size() > 0}" class="list-group mb-2" th:each="QA : ${eventQuestionAnswers}">
+                            <li class="list-group-item border-0 bg-gray text-white py-3">
+                                Question:
+                                <span th:text="${QA.getQuestionText() == null ? '-' : QA.getQuestionText()}"></span>
+                            </li>
+                            <li class="list-group-item border-0 bg-gray text-white py-3">
+                                Answer:
+                                <span th:if="${QA.getAnswerText() != null}" th:text="${QA.getAnswerText()}"></span>
+                                <form th:method="POST" class="my-2" th:if="${QA.getAnswerText() == null}" th:action="@{'/festival/'+${festival_id}+'/event/'+${event.getId()}+'/qa/'+${QA.getQuestionId()}+''}">
+                                    <div class="row justify-content-center align-items-center">
+                                        <div class="col-md-10">
+                                            <input type="text" name="answerText" class="form-control" placeholder="Answer" autofocus="true">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="btn btn-lg btn-success btn-block d-inline" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </li>
+                        </ul>
+
+                        <ul th:if="${eventQuestionAnswers == null || eventQuestionAnswers.size() == 0}" class="list-group mb-2">
+                            <li class="list-group-item border-0 bg-gray text-white py-3">No Questions Asked Yet</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="participantsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Participants</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered table-striped ">
+
+                            <thead>
+                            <tr>
+                                <th class="col-md-1">Registration Id</th>
+                                <th class="col-md-2">Registration Date</th>
+                                <th class="col-md-2">Student Name</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="registration: ${eventRegistrationsList}">
+                                <td th:text="${registration.registrationId}" />
+                                <td th:text="${registration.registrationDate}" />
+                                <td th:text="${registration.studentName}" />
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="notificationModalLabel">Notification</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/notification/new}">
+                            <div class="mb-3">
+                                <label for="receivertype" class="col-form-label" >Recipient:</label>
+                                <select class="form-control" id="receivertype" name="receivertype" placeholder="Recipient" autofocus="true" th:name="receipientType">
+                                    <option th:each="i : ${T(com.eventmanagement.EventManagement.model.ReceipientType).values()}" th:value="${i}" th:text="${i}"></option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <input type="number" hidden th:name="eventId" th:value="${event.getId()}"/>
+                                <input type="number" hidden th:name="festivalId" th:value="${event.getFestivalId()}"/>
+                                <label for="message-text" class="col-form-label">Message:</label>
+                                <textarea th:value="${message}" th:name="message" class="form-control" id="message-text" required></textarea>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary" id="submitButton">Send</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

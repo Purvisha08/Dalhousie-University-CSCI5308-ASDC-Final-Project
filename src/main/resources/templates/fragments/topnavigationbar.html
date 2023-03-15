@@ -1,0 +1,30 @@
+  <nav th:fragment="hosttopnavbar(activeTab)" class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" th:href="@{/hostdashboard}">My Event Manager</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a class="nav-link" th:classappend="${activeTab == 'festivals' ? 'active' : ''}" th:href="@{/hostdashboard}">Festivals</a></li>
+        <li><a class="nav-link" th:classappend="${activeTab == 'questions' ? 'active' : ''}" th:href="@{/questions}">Questions</a></li>
+        <li><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+
+  <nav th:fragment="studenttopnavbar(activeTab)" class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" th:href="@{/studentdashboard}">My Event Manager</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a class="nav-link" th:classappend="${activeTab == 'events' ? 'active' : ''}" th:href="@{/studentdashboard}">Events</a></li>
+        <li><a class="nav-link" th:classappend="${activeTab == 'notifications' ? 'active' : ''}" th:href="@{/notification/student}">Notification</a></li>
+        <li><a class="nav-link" th:classappend="${activeTab == 'myevents' ? 'active' : ''}" th:href="@{/myevents}">My Events</a></li>
+        <li><a class="nav-link" th:classappend="${activeTab == 'wallet' ? 'active' : ''}" th:href="@{/wallet}">Wallet</a></li>
+        <li><a class="nav-link" th:classappend="${activeTab == 'studentprofile' ? 'active' : ''}" th:href="@{/studentprofile}">Profile</a></li>
+        <li><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+      </ul>
+    </div>
+  </nav>

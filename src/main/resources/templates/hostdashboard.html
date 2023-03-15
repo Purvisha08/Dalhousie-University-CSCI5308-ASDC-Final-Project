@@ -1,0 +1,52 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace = "fragments/headTag :: head_tag('Host Dashboard')"></div>
+
+<body>
+    <div th:replace = "fragments/topnavigationbar :: hosttopnavbar(activeTab = 'festivals')"></div>
+    <div class="row justify-content-center align-items-center my-3">
+        <div class="col-md-6">
+            <form th:action="@{/hostdashboard/search}" method="get">
+                <div class="input-group mb-3">
+                    <input type="search" name="searchQuery" class="form-control" placeholder="Search" aria-label="search">
+                    <button type="submit" class="input-group-text bg-success text-white" id="basic-addon1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-2">
+            <a class="btn btn-lg btn-success btn-block d-inline" type="submit" href="/festival/new">Create Festival</a>
+        </div>
+    </div>
+    <div class="row justify-content-center align-items-center mt-3">
+        <div class="col-md-8">
+            <p class="h3">Festivals</p>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th> Name </th>
+                        <th> University </th>
+                        <th> Number of Events </th>
+                        <th> Total Participants </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${festivals.empty}">
+                        <td colspan="4"> No festivals yet. </td>
+                    </tr>
+                    <tr th:each="festival : ${festivals}">
+                        <td><a th:href="@{'/festival/'+${festival.getId()}+''}" th:text="${festival.getName()}"> Name </a></td>
+                        <td><span th:text="${festival.getUniversity()}"> University </span></td>
+                        <td><span th:text="${festival.getEventCount()}"> 12 </span></td>
+                        <td><span th:text="${festival.getTotalParticipants()}"> 12 </span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>

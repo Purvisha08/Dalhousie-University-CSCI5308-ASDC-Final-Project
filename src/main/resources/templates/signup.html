@@ -1,0 +1,60 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace = "fragments/headTag :: head_tag('Sign Up')"></div>
+
+<body>
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="container col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Create your account</h2>
+                    <form method="POST" class="signup-form" th:object="${signUpForm}" th:action="@{/signup}">
+
+                        <div class="mb-3">
+                            <label class="form-label" for="userType">Register as: </label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" th:field="*{userType}" id="option1" value="Student">
+                                <label class="form-check-label" for="option1">Student</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" th:field="*{userType}" id="option2" value="Host">
+                                <label class="form-check-label" for="option2">Host</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="name">Name</label>
+                            <input type="text" th:field="*{name}" class="form-control" placeholder="Name"
+                                autofocus="true">
+                            <small class="my-1 text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+                        </div>
+        
+                        <div class="mb-3">
+                            <label class="form-label" for="email">Email</label>
+                            <input type="text" th:field="*{email}" class="form-control" placeholder="Email"
+                                autofocus="true">
+                            <small class="my-1 text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+                        </div>
+        
+                        <div class="mb-3">
+                            <label class="form-label" for="password">Password</label>
+                            <input type="password" th:field="*{password}" class="form-control" placeholder="Password">
+                            <small class="my-1 text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
+                        </div>
+        
+                        <div class="mb-3">
+                            <label class="form-label" for="passwordConfirm">Confirm Password</label>
+                            <input type="password" th:field="*{passwordConfirm}" class="form-control"
+                                        placeholder="Confirm password">
+                            <small class="my-1 text-danger" th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}"></small>
+                        </div>
+        
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

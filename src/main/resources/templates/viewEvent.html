@@ -1,0 +1,260 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace = "fragments/headTag :: head_tag('Event')"></div>
+<style>
+    table, th, td{
+        border: 5px;
+        padding: 10px;
+    }
+    .question-answer-table{
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    .tr-question-answer-table{
+        border: 1px solid black;
+    }
+
+    .main-container{
+        width: 100%;
+        height: 100%;
+        padding-left: 25px;
+    }
+
+    .details-div{
+        width: 100%;
+        height: 100%;
+        margin-top: 25px;
+    }
+    .name-desc{
+        width: 60%;
+        height: 100%;
+        float: left;
+        border-collapse: collapse;
+    }
+    .event-desc{
+        width: 40%;
+        height: 100%;
+        float: right;
+        border-collapse: collapse;
+    }
+    .date-table{
+        padding:10px;
+    }
+
+    .complete-questions{
+        width:100%;
+        height: 100%;
+        border-collapse: collapse;
+    }
+
+    .question-div{
+        width: 100%;
+        height: 40%;
+        border-collapse: collapse;
+    }
+
+    .previous-questions{
+        width: 100%;
+        height: 60%;
+        border-collapse: collapse;
+    }
+
+    .rating {
+    float:left;
+    border:none;
+    }
+    .rating:not(:checked) > input {
+        position:absolute;
+        top:-9999px;
+        clip:rect(0, 0, 0, 0);
+    }
+    .rating:not(:checked) > label {
+        float:right;
+        width:1em;
+        padding:0 .1em;
+        overflow:hidden;
+        white-space:nowrap;
+        cursor:pointer;
+        font-size:200%;
+        line-height:1.2;
+        color:#ddd;
+    }
+    .rating:not(:checked) > label:before {
+        content:'★ ';
+    }
+    .rating > input:checked ~ label {
+        color: #f70;
+    }
+    .rating:not(:checked) > label:hover, .rating:not(:checked) > label:hover ~ label {
+        color: gold;
+    }
+    .rating > input:checked + label:hover, .rating > input:checked + label:hover ~ label, .rating > input:checked ~ label:hover, .rating > input:checked ~ label:hover ~ label, .rating > label:hover ~ input:checked ~ label {
+        color: #ea0;
+    }
+    .rating > label:active {
+        position:relative;
+    }
+
+</style>
+
+<!--ref: https://stackoverflow.com/questions/36662712/how-do-i-divide-a-page-in-three-vertical-sections-->
+
+<body>
+<div th:replace = "fragments/topnavigationbar :: studenttopnavbar(activeTab='events')">
+</div>
+
+<div class="main-container">
+    <div th:if="${update_error}" th:text="${update_error}" class="alert alert-danger">
+        Invalid.
+      </div>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-10 border p-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 th:text="${currentEvent.name}"></h2>
+                    <br>
+        
+                    <p th:text="${currentEvent.category}"></p>
+        
+                    <br>
+                    <h4>Description: </h4>
+                    <p th:text="${currentEvent.description}"></p>
+                    <br>
+
+                    <h4>Average Rating: </h4>
+                    <p th:text="${currentEvent.getRating() == null ? 'Not Rated Yet' : currentEvent.getRating()}"></p>
+                    <br>
+        
+                </div>
+        
+                <div class="col-md-6">
+                    <table class="date-table">
+                        <tr>
+                            <th>Venue</th>
+                            <td th:text="${currentEvent.venue}"></td>
+                        </tr>
+                        <tr>
+                            <th>Start Date</th>
+                            <td th:text="${currentEvent.startDate}"></td>
+                        </tr>
+                        <tr>
+                            <th>End Date</th>
+                            <td th:text="${currentEvent.endDate}"></td>
+                        </tr>
+                        <tr>
+                            <th>Seats left</th>
+                            <td th:text="${currentEvent.capacity - currentEvent.registerCount}"></td>
+                        </tr>
+                        <tr>
+                            <th>Price</th>
+                            <td th:text="${currentEvent.price}"></td>
+                        </tr>
+        
+                    </table>
+                    <br>
+                    <div class="row" th:if="${!currentEvent.getCompleted()}">
+                        <form th:if="${isRegistered == false && currentEvent.registerCount != currentEvent.capacity}" th:action="@{'/eventregister/{id}'(id=${currentEvent.id})}"  th:method="get">
+                            <span style="color:orange">Hurry up !! Register fast.</span>
+                            <button type="submit" id="submitButton">Register</button>
+                        </form>
+                        <form th:if="${currentEvent.registerCount == currentEvent.capacity && !isRegistered}" th:action="@{'/waitlist/add/{id}'(id=${currentEvent.id})}"  th:method="POST">
+                            <span style="color:red">Oops !! No seats left !! Register to waitlist and get notified when seat is empty</span>
+                            <br>
+                            <br>
+                            <button type="submit" id="submitButton">Add to waitlist</button>
+                        </form>
+                        <form th:if="${isRegistered == true}" th:action="@{'/eventregister/cancel/{id}'(id=${registrationDetail.registrationId})}"  th:method="get">
+                            <span style="color:green">You have already registered.</span>
+                            <button type="submit" id="submitButton">Cancel your registration</button>
+                        </form>
+                    </div>
+        
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <!--    the above is end of detailsDiv-->
+    <div th:if="${currentEvent.getCompleted()}" class="row mt-5 justify-content-center align-items-center">
+        <div class="col-md-10 border p-4">
+            <p class="h2">Rate the event</p>
+            <form th:action="@{'/event/'+${currentEvent.getId()}+'/rating/update'}" method="POST">
+                <!-- start rating code referenced from: http://jsfiddle.net/swfour/fnU5V/4/ -->
+                <div class="row align-items-center">
+                    <div class="col-md-12 d-flex align-items-center">
+                        <fieldset class="rating">
+                            <input type="radio" id="star5" name="rating" value="5"/>
+                            <label for="star5" onclick="showRatingBtn()">5 stars</label>
+                            <input type="radio" id="star4" name="rating" value="4"/>
+                            <label for="star4" onclick="showRatingBtn()">4 stars</label>
+                            <input type="radio" id="star3" name="rating" value="3"/>
+                            <label for="star3" onclick="showRatingBtn()">3 stars</label>
+                            <input type="radio" id="star2" name="rating" value="2"/>
+                            <label for="star2" onclick="showRatingBtn()">2 stars</label>
+                            <input type="radio" id="star1" name="rating" value="1"/>
+                            <label for="star1" onclick="showRatingBtn()">1 star</label>
+                        </fieldset>
+                        <button id="rating-btn" class="ms-3 btn btn-success d-none" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row justify-content-center align-items-center bo">
+        <div class="col-md-10 border p-4 my-5" th:if="${!currentEvent.getCompleted()}">
+            <h3>Got a question?</h3>
+            <form id="askQuestion" th:object="${questionForm}" method="POST" th:action="@{'/askquestion/{id}'(id=${currentEvent.id})}">
+                <p>
+                    <label>Question:</label>
+                </p>
+                <p>
+                    <textarea rows="4" cols="100" form="askQuestion" name="questionText" placeholder="Ask a question!" th:field="*{questionText}" required></textarea>
+                </p>
+                <p>
+                    <label>Level of urgency?</label>
+                    <input type="range" min="1" max="5" name="levelOfUrgency" th:field="*{levelOfUrgency}">
+                </p>
+                <p>
+                    <button type="submit">Post Question</button>
+                </p>
+            </form>
+        </div>
+
+<!--    ref: https://stackoverflow.com/questions/62470329/thymeleaf-theach-for-two-table-rows    -->
+        <div class="col-md-10 border p-4 my-5">
+            <h3>Previously answered questions</h3>
+            <div class="individual-question">
+                <table class="list-group mb-2">
+                    <th:block th:each="qa: ${questionanswers}">
+                        <tr class="list-group-item border-0 bg-gray text-white py-3">
+                            <td th:text="'Question: ' + ${qa.questionText}"></td>
+                        </tr>
+                        <tr>
+                            <td th:text="'Answer: ' + ${qa.answerText == null ? '' : qa.answerText}"></td>
+                        </tr>
+                    </th:block>
+                </table>
+                <br>
+                <br>
+            </div>
+            <br>
+            <br>
+        </div>
+    </div>
+
+
+</div>
+<!--above is end of main-container-->
+
+
+</body>
+</html>
+
+<script>
+    const ratingButton = document.querySelector('#rating-btn');
+
+    function showRatingBtn() {
+        ratingButton.classList.remove('d-none');
+    }
+</script>

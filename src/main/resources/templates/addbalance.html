@@ -1,0 +1,183 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+<body>
+
+<div class="row">
+    <div th:replace = "fragments/topnavigationbar :: studenttopnavbar(activeTab='wallet')"></div>
+</div>
+<div class="row">
+
+    <div style="margin-top:60px; margin-left:20px;" >
+        <!-- Payment nav tabs -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item"  role="presentation">
+                <button class="nav-link" th:classappend="${activeTab == 'card' ? 'active' : ''}"
+                        id="card-tab" data-bs-toggle="tab" data-bs-target="#card" type="button" role="tab">Card</button>
+            </li>
+            <li class="nav-item"  role="presentation">
+                <button class="nav-link" th:classappend="${activeTab == 'netbanking' ? 'active' : ''}"
+                        id="netbanking-tab" data-bs-toggle="tab" data-bs-target="#netbanking" type="button" role="tab">Net Banking</button>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content" style="margin-top:20px;">
+
+            <div class="tab-pane" th:classappend="${activeTab == 'card' ? 'active' : ''}" id="card" role="tabpanel">
+                <form class="form-signin" th:object="${cardForm}" method="POST" th:action="@{/addbalancebycreditcard}">
+
+                    <div class="row">
+                        <div class="col-2">
+                            <p>CAD</p>
+                        </div>
+                        <div class="col-6">
+                            <input type="number" id="amount" name="amount" th:field="*{amountRequested}" class="form-control"
+                                   minlength="1" maxlength="5"  placeholder="Amount to add" th:value="${amountRequested}" required />
+                            <small class="my-1 text-danger" th:if="${#fields.hasErrors('amountRequested')}" th:errors="*{amountRequested}"></small>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-2">
+                            <p>Credit Card Number</p>
+                        </div>
+                        <div class="col-6">
+                            <input type="text" id="cardnumber" name="cardnumber" th:field="*{cardNumber}" class="form-control"
+                                   minlength="16" maxlength="16"  placeholder="Credit Card Number" required />
+                            <small class="my-1 text-danger" th:if="${#fields.hasErrors('cardNumber')}" th:errors="*{cardNumber}"></small>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-2">
+                            <p>Card Holder Name</p>
+                        </div>
+                        <div class="col-6">
+                            <input type="text" id="cardHolderName" name="cardHolderName" th:field="*{cardHolderName}"
+                                   maxlength="50" class="form-control" placeholder="Name" required />
+                            <small class="my-1 text-danger" th:if="${#fields.hasErrors('cardHolderName')}" th:errors="*{cardHolderName}"></small>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-2">
+                            <p>CVV</p>
+                        </div>
+                        <div class="col-1">
+                            <input type="password" id="cvvNumber" name="cvvNumber" th:field="*{cvvNumber}" minlength="3"
+                                   maxlength="3" class="form-control" placeholder="CVV number" required />
+                            <small class="my-1 text-danger" th:if="${#fields.hasErrors('cvvNumber')}" th:errors="*{cvvNumber}"></small>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-2">
+                            <p>Expiry</p>
+                        </div>
+                        <div class="col-6">
+                            <select th:field="*{cardExpiryMonth}">
+                                <option th:each="i : ${#numbers.sequence(1,12)}" th:value="${i}" th:text="${i}"></option>
+                            </select>
+                            <select th:field="*{cardExpiryYear}">
+                                <option th:each="i : ${#numbers.sequence(2022,2030)}" th:value="${i}" th:text="${i}"></option>
+                            </select>
+                            <small class="my-1 text-danger" th:if="${#fields.hasErrors('cardExpiryMonth')}" th:errors="*{cardExpiryMonth}"></small>
+
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-2"></div>
+                        <div class="col-6"><button class="btn btn-outline-success btn-sm" type="submit"> Pay</button></div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="tab-pane" th:classappend="${activeTab == 'netbanking' ? 'active' : ''}" id="netbanking" role="tabpanel">
+
+                <form class="form-signin" th:object="${netBankingForm}" method="POST" th:action="@{/addbalancebynetbanking}">
+
+                    <div class="row">
+                        <div class="col-2">
+                            <p>CAD</p>
+                        </div>
+                        <div class="col-6">
+                            <input type="number" id="amount" name="amount" th:field="*{amountRequested}" class="form-control"
+                                   minlength="1" maxlength="5"  placeholder="Amount to add" th:value="${amountRequested}" required />
+                            <small class="my-1 text-danger" th:if="${#fields.hasErrors('amountRequested')}" th:errors="*{amountRequested}"></small>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-2">
+                            Bank
+                        </div>
+                        <div class="col-4">
+                            <select class="form-select form-select-sm" th:field="*{bankName}" required>
+                                <option selected value="Bank of Montreal (BMO)">Bank of Montreal (BMO)</option>
+                                <option value="Canadian Imperial Bank of Commerce (CIBC)">Canadian Imperial Bank of Commerce (CIBC)</option>
+                                <option value="HSBC Canada">HSBC Canada</option>
+                                <option value="National Bank of Canada">National Bank of Canada</option>
+                                <option value="Royal Bank of Canada (RBC)">Royal Bank of Canada (RBC)</option>
+                                <option value="Scotiabank">Scotiabank</option>
+                                <option value="TD Canada Trust">TD Canada Trust</option>
+                            </select>
+                            <small class="my-1 text-danger" th:if="${#fields.hasErrors('bankName')}" th:errors="*{bankName}"></small>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-2">
+                            <p>User id</p>
+                        </div>
+                        <div class="col-6">
+                            <input type="text" id="userId" name="userId" th:field="*{userId}" class="form-control"
+                                   minlength="1" maxlength="16"  placeholder="Bank user id" required />
+                            <small class="my-1 text-danger" th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></small>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-2">
+                            <p>Pin (6 digit)</p>
+                        </div>
+                        <div class="col-6">
+                            <input type="text" id="pin" name="pin" th:field="*{pin}"
+                                   maxlength="6" class="form-control" placeholder="Enter 6 digit pin" required />
+                            <small class="my-1 text-danger" th:if="${#fields.hasErrors('pin')}" th:errors="*{pin}"></small>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-2"></div>
+                        <div class="col-6"><button class="btn btn-outline-success btn-sm" type="submit"> Pay</button></div>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+</body>
+
+</html>

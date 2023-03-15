@@ -1,0 +1,41 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace = "fragments/headTag :: head_tag('My Events')"></div>
+
+<body>
+<div th:replace = "fragments/topnavigationbar :: studenttopnavbar(activeTab='notifications')"></div>
+
+<div style="margin-top:10px; margin-left:50px;">
+
+    <div class="container">
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped ">
+
+                <thead>
+                <tr>
+                    <th class="col-md-2">Event name</th>
+                    <th class="col-md-3">Notified Time</th>
+                    <th class="col-md-7">Message</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="notification: ${notificationList}">
+                    <td>
+                        <a th:href="@{/events/event(id=${notification.eventId})}" th:text="${notification.eventName}"></a>
+                    </td>
+                    <td th:text="${notification.notifiedTime}" />
+                    <td th:text="${notification.message}" />
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

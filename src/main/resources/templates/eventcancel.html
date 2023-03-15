@@ -1,0 +1,52 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace = "fragments/headTag :: head_tag('Cancel')"></div>
+
+<body>
+
+<div th:replace = "fragments/topnavigationbar :: studenttopnavbar(activeTab='events')"></div>
+
+<div style="margin-top:100px; margin-left:50px;">
+
+  <div class="row" >
+    <div class="col-2">
+      Event:
+    </div>
+    <div class="col-2">
+      <span th:text="${eventcancel.registsrationDetail.eventName}"></span>
+    </div>
+  </div>
+  <br>
+  <div class="row" >
+    <div class="col-2">
+      You paid (CAD):
+    </div>
+    <div class="col-2">
+      <span th:text="${eventcancel.registsrationDetail.finalPrice}"></span>
+    </div>
+  </div>
+  <br>
+  <div class="row" >
+    <div class="col-2">
+      Refundable amount (CAD):
+    </div>
+    <div class="col-2">
+      <span th:text="${eventcancel.refundPrice}" th:style="${ eventcancel.refundPrice ==  eventcancel.registsrationDetail.finalPrice ? 'color:green' : 'color:red'}"></span>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-2"></div>
+    <div class="col-2">
+      <form th:action="@{'/eventregister/cancel/{id}'(id=${eventcancel.registrationId})}"  th:method="post">
+        <button class="btn btn-outline-success btn-sm" type="submit"> Confirm</button>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

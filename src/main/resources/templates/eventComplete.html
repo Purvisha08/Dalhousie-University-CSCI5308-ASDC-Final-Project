@@ -1,0 +1,83 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <div th:replace = "fragments/headTag :: head_tag('Event Complete')"></div>
+
+    <body>
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="container col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Event Complete</h2>
+                        <hr>
+                        <div th:if="${update_error}" th:text="${update_error}" class="alert alert-danger"></div>
+                        <form method="POST" class="update-event-form" th:object="${eventComplete}"
+                            th:action="@{'/festival/'+${festival_id}+'/event/'+${eventComplete.id}+'/complete'}">
+
+                            <input type="hidden" th:field="*{name}">
+                            <input type="hidden" th:field="*{description}">
+                            <input type="hidden" th:field="*{startDate}">
+                            <input type="hidden" th:field="*{endDate}">
+                            <input type="hidden" th:field="*{price}">
+                            <input type="hidden" th:field="*{venue}">
+                            <input type="hidden" th:field="*{capacity}">
+                            <input type="hidden" th:field="*{category}">
+
+                            <div class="mb-3">
+                                <label class="form-label" for="messageToParticipants">Message To Participants</label>
+                                <textarea name="messageToParticipants" type="text" class="form-control" placeholder="Message To Participants" autofocus="true"></textarea>
+                                <small class="my-1 text-danger" th:if="${#fields.hasErrors('messageToParticipants')}" th:errors="*{messageToParticipants}"></small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="declareWinners"> Declare Winners </label>
+                                <div class="form-check">
+                                    <input onclick="onRadioClick(this)" class="form-check-input" type="radio" name="declareWinners" id="declareWinners" value="1">
+                                    <label class="form-check-label" for="declareWinners"> Yes </label>
+                                </div>
+                                <div class="form-check">
+                                    <input checked onclick="onRadioClick(this)" class="form-check-input" type="radio" name="declareWinners" id="declareWinners" value="0">
+                                    <label class="form-check-label" for="declareWinners"> No </label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 d-none" id="resultSelects">
+                                <label class="form-label" for="results">Results</label>
+                                <select name="winner" class="form-control mb-2" placeholder="Winner" autofocus="true">
+                                    <option value="" th:disabled="disabled" th:selected="selected">Select Winner</option>
+                                    <option th:each="option : ${eventStudents}" th:value="${option.getId()}" th:text="${option.getName()}"></option>
+                                </select>
+                                <small class="my-1 text-danger" th:if="${#fields.hasErrors('winner')}" th:errors="*{winner}"></small>
+
+                                <select name="firstRunnerUp" class="form-control mb-2" placeholder="First Runner Up" autofocus="true">
+                                    <option value="" th:disabled="disabled" th:selected="selected">Select First Runner Up</option>
+                                    <option th:each="option : ${eventStudents}" th:value="${option.getId()}" th:text="${option.getName()}"></option>
+                                </select>
+                                <small class="my-1 text-danger" th:if="${#fields.hasErrors('firstRunnerUp')}" th:errors="*{firstRunnerUp}"></small>
+
+                                <select name="secondRunnerUp" class="form-control mb-2" placeholder="Second Runner Up" autofocus="true">
+                                    <option value="" th:disabled="disabled" th:selected="selected">Select Second Runner Up</option>
+                                    <option th:each="option : ${eventStudents}" th:value="${option.getId()}" th:text="${option.getName()}"></option>
+                                </select>
+                                <small class="my-1 text-danger" th:if="${#fields.hasErrors('secondRunnerUp')}" th:errors="*{secondRunnerUp}"></small>
+                            </div>
+
+                            <button class="btn btn-lg btn-success btn-block" type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        const resultSelects = document.getElementById('resultSelects');
+        function onRadioClick(radioButton) {
+            let val = radioButton.value;
+            if(val == 1) {
+                resultSelects.classList.remove('d-none');
+            } else {
+                resultSelects.classList.add('d-none');
+            }
+        }
+    </script>
+
+</html>

@@ -1,0 +1,63 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+
+
+<div th:replace = "fragments/headTag :: head_tag('Host Dashboard')"></div>
+
+<style>
+    .item{
+        grid-column: 2/5;
+        grid-row: 1/3;
+    }
+</style>
+
+<body>
+<div th:replace = "fragments/topnavigationbar :: hosttopnavbar(activeTab = 'festivals')"></div>
+
+</div>
+
+<h3> Question Dashboard</h3>
+<div class="container">
+    <table class="table table-hover" cellpadding="20px">
+        <thead class="thead-dark">
+        <tr>
+            <th>Event</th>
+            <th>Festival</th>
+            <th>Question</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ql: ${questionList}">
+            <td th:text="${ql.eventName}"/>
+            <td th:text="${ql.festivalName}"/>
+            <td th:text="${ql.questionText}"/>
+            <td>
+                <details>
+                    <summary>
+                        Answer Now
+                    </summary>
+                    <span class="item">
+                        <form th:object="${answerForm}" method="POST" th:action="@{'/answerquestion/'+${ql.questionId} + '/event/' + ${ql.eventId} + '/student/' + ${ql.studentId} + ''}">
+                            <p>
+                                <textarea rows="5" cols="25" name="answerText" placeholder="Answer here." th:field="*{answerText}" required></textarea>
+                            </p>
+                            <p>
+                                <button type="submit">
+                                    Answer
+                                </button>
+                            </p>
+                        </form>
+                    </span>
+                </details>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+
+</html>

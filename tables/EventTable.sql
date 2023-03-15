@@ -1,0 +1,23 @@
+CREATE  TABLE event (
+    id int NOT NULL AUTO_INCREMENT,
+    festival_id int not null,
+    category varchar(255) not null,
+    venue varchar(255) not null,
+    name varchar(255) NOT NULL,
+    description text NOT NULL,
+    price int,
+    capacity int not null,
+    startDate DATE not null,
+    endDate date not null,
+    completed BOOLEAN DEFAULT false,
+    winner int,
+    firstRunnerUp int,
+    secondRunnerUp int,
+    registerCount int,
+    waitListCount int,
+    PRIMARY KEY (id),
+    FOREIGN KEY (festival_id) REFERENCES festival(festival_id),
+    FOREIGN KEY (winner) REFERENCES student(id),
+    FOREIGN KEY (firstRunnerUp) REFERENCES student(id),
+    FOREIGN KEY (secondRunnerUp) REFERENCES student(id)
+);

@@ -1,0 +1,71 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace = "fragments/headTag :: head_tag('Register')"></div>
+
+<body>
+
+<div th:replace = "fragments/topnavigationbar :: studenttopnavbar(activeTab='events')"></div>
+
+<div style="margin-top:100px; margin-left:50px;">
+
+  <div class="row" >
+    <div class="col-2">
+      Event:
+    </div>
+    <div class="col-2">
+      <span th:text="${eventregister.eventName}"></span>
+    </div>
+  </div>
+  <br>
+  <div class="row" >
+    <div class="col-2">
+      Original price:
+    </div>
+    <div class="col-2">
+      <span th:text="${eventregister.originalPrice}"></span>
+    </div>
+  </div>
+  <br>
+  <div class="row" >
+    <div class="col-2">
+      Discount(%):
+    </div>
+    <div class="col-2">
+      <span th:text="${eventregister.discountPercentage}"></span>
+    </div>
+  </div>
+  <br>
+  <div class="row" >
+    <div class="col-2">
+      Final price:
+    </div>
+    <div class="col-2">
+      <span th:text="${eventregister.finalPrice}"></span>
+    </div>
+  </div>
+  <br>
+  <div class="row" >
+    <div class="col-2">
+      Current balance:
+    </div>
+    <div class="col-2">
+      <span th:text="${wallet.currentBalance}" th:style="${ eventregister.finalPrice <=  wallet.currentBalance ? 'color:green' : 'color:red'}"></span>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-2"></div>
+    <div class="col-2">
+      <form th:action="@{'/eventregister/{id}'(id=${eventregister.eventId})}"  th:method="post">
+        <button class="btn btn-outline-success btn-sm" type="submit"
+                th:disabled="${ eventregister.finalPrice <=  wallet.currentBalance ? false : true}"> Confirm</button>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>
